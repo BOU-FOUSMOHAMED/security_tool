@@ -74,7 +74,7 @@ def scan():
         if proc.returncode not in (0, 1):
             return jsonify(error="échec nmap", detail=proc.stderr.strip()), 502
         return jsonify({
-       result,
+        "result": result,
         "stdout": result.stdout,
         
     })
