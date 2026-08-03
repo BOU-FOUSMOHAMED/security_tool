@@ -25,7 +25,7 @@ def parse_scan(xml_text):
     if stats is not None:
         result["duration"] = float(stats.get("elapsed", 0))
 
-    host = root.find("host")
+    host = root.find("Host")
     if host is None:
         return result
     result["status"] = host.findtext("status/@state") or "down"
@@ -69,12 +69,12 @@ def scan():
             ["nmap","-Pn","-sT","-n","oX","-", target],
             capture_output=True, text=True, timeout=SCAN_TIMEOUT,
         )
-        # result = parse_scan(proc.stdout)
-        # result["elapsed"] = round(time.monotonic() - start, 2)
+        result = parse_scan(proc.stdout)
+        result["elapsed"] = round(time.monotonic() - start, 2)
         if proc.returncode not in (0, 1):
             return jsonify(error="échec nmap", detail=proc.stderr.strip()), 502
         return jsonify({
-        "result": proc.stdout ,
+        "result": result,
         
         
     })
