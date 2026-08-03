@@ -58,7 +58,7 @@ def health():
 @app.get("/scan")
 def scan():
     target = (request.args.get("target") or "").strip()
-    var = (request.args.get("var") or "").strip()
+    
     if not target:
         return jsonify(error="parametre 'target' requis"), 400
 
@@ -67,7 +67,7 @@ def scan():
     try:
         start = time.monotonic()
         proc = subprocess.run(
-            ["nmap",var, target],
+            ["nmap","-sV", target],
             capture_output=True, text=True, timeout=SCAN_TIMEOUT,
         )
        # result = parse_scan(proc.stdout)
