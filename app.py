@@ -73,7 +73,11 @@ def scan():
         result["elapsed"] = round(time.monotonic() - start, 2)
         if proc.returncode not in (0, 1):
             return jsonify(error="échec nmap", detail=proc.stderr.strip()), 502
-        return jsonify(result)
+        return jsonify({
+        "returncode": result.returncode,
+        "stdout": result.stdout,
+        "stderr": result.stderr
+    })
     except FileNotFoundError:
         return jsonify(error="nmap introuvable"), 503
     except subprocess.TimeoutExpired:
@@ -90,3 +94,5 @@ if __name__ == "__main__":
         port=int(os.environ.get("PORT", 5000)),
         threaded=False,
     )
+
+
