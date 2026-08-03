@@ -66,7 +66,7 @@ def scan():
     try:
         start = time.monotonic()
         proc = subprocess.run(
-            ["nmap","-Pn","-sT","-n", target],
+            ["nmap","-Pn","-sT","-n","oX","-", target],
             capture_output=True, text=True, timeout=SCAN_TIMEOUT,
         )
         # result = parse_scan(proc.stdout)
