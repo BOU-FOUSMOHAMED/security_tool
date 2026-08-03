@@ -67,7 +67,7 @@ def scan():
         start = time.monotonic()
         proc = subprocess.run(
             ["nmap",
-    "-sT",
+    
     "-Pn",
     "-T4",
     "-F",
