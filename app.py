@@ -59,7 +59,12 @@ def health():
 def test():
 
     result = subprocess.run(
-        ["nmap", "youtube.com"],
+        [
+    "nmap",
+    "-sT",
+    "-Pn",
+    "-T4",
+     "youtube.com"],
         capture_output=True,
         text=True
     )
