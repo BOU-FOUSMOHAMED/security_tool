@@ -75,7 +75,7 @@ def scan():
             return jsonify(error="échec nmap", detail=proc.stderr.strip()), 502
         return jsonify({
         "result": result,
-        "stdout": result.stdout,
+        
         
     })
     except FileNotFoundError:
