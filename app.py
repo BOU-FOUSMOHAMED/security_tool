@@ -56,50 +56,32 @@ def health():
 
 
 @app.get("/scan")
-def test():
+def scan():
+    target = (request.args.get("target") or "").strip()
+    if not target:
+        return jsonify(error="parametre 'target' requis"), 400
 
-    result = subprocess.run(
-        [
-    "nmap",
-    "-sT",
-    "-Pn",
-    "-T4",
-     "youtube.com"],
-        capture_output=True,
-        text=True
-    )
-
-    return jsonify({
-        "returncode": result.returncode,
-        "stdout": result.stdout,
-        "stderr": result.stderr
-    })
-# def scan():
-#     target = (request.args.get("target") or "").strip()
-#     if not target:
-#         return jsonify(error="parametre 'target' requis"), 400
-
-#     if not _lock.acquire(timeout=SCAN_TIMEOUT):
-#         return jsonify(error="scan déjà en cours"), 429
-#     try:
-#         start = time.monotonic()
-#         proc = subprocess.run(
-#             ["nmap","-sV","-oX","-", target],
-#             capture_output=True, text=True, timeout=SCAN_TIMEOUT,
-#         )
-#         result = parse_scan(proc.stdout)
-#         result["elapsed"] = round(time.monotonic() - start, 2)
-#         if proc.returncode not in (0, 1):
-#             return jsonify(error="échec nmap", detail=proc.stderr.strip()), 502
-#         return jsonify(result)
-#     except FileNotFoundError:
-#         return jsonify(error="nmap introuvable"), 503
-#     except subprocess.TimeoutExpired:
-#         return jsonify(error="scan interrompu (timeout)"), 504
-#     except ET.ParseError:
-#         return jsonify(error="sortie nmap illisible"), 502
-#     finally:
-#         _lock.release()
+    if not _lock.acquire(timeout=SCAN_TIMEOUT):
+        return jsonify(error="scan déjà en cours"), 429
+    try:
+        start = time.monotonic()
+        proc = subprocess.run(
+            ["nmap","-sT","-oX","-", target],
+            capture_output=True, text=True, timeout=SCAN_TIMEOUT,
+        )
+        result = parse_scan(proc.stdout)
+        result["elapsed"] = round(time.monotonic() - start, 2)
+        if proc.returncode not in (0, 1):
+            return jsonify(error="échec nmap", detail=proc.stderr.strip()), 502
+        return jsonify(result)
+    except FileNotFoundError:
+        return jsonify(error="nmap introuvable"), 503
+    except subprocess.TimeoutExpired:
+        return jsonify(error="scan interrompu (timeout)"), 504
+    except ET.ParseError:
+        return jsonify(error="sortie nmap illisible"), 502
+    finally:
+        _lock.release()
 
 
 if __name__ == "__main__":
