@@ -1,7 +1,10 @@
 FROM python:3.12-slim
 
 RUN apt-get update && \
-    apt-get install -y nmap && \
+    apt-get install -y --no-install-recommends \
+    nmap \
+    libcap2-bin && \
+    setcap cap_net_raw,cap_net_admin=eip /usr/bin/nmap && \
     rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
