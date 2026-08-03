@@ -74,10 +74,10 @@ def scan():
         if proc.returncode not in (0, 1):
             return jsonify(error="échec nmap", detail=proc.stderr.strip()), 502
         return jsonify({
-        "result": proc  ,
-        
-        
-    })
+    "returncode": proc.returncode,
+    "stdout": proc.stdout,
+    "stderr": proc.stderr
+})
     except FileNotFoundError:
         return jsonify(error="nmap introuvable"), 503
     except subprocess.TimeoutExpired:
