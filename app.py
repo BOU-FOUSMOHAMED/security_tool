@@ -69,12 +69,12 @@ def scan():
             ["nmap","-sT","-oX","-", target],
             capture_output=True, text=True, timeout=SCAN_TIMEOUT,
         )
-        result = parse_scan(proc.stdout)
-        result["elapsed"] = round(time.monotonic() - start, 2)
+        # result = parse_scan(proc.stdout)
+        # result["elapsed"] = round(time.monotonic() - start, 2)
         if proc.returncode not in (0, 1):
             return jsonify(error="échec nmap", detail=proc.stderr.strip()), 502
         return jsonify({
-        "result": result,
+        "result": proc.stdout ,
         
         
     })
