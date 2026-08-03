@@ -25,7 +25,7 @@ def parse_scan(xml_text):
     if stats is not None:
         result["duration"] = float(stats.get("elapsed", 0))
 
-    host = root.find("Host")
+    host = root.find("host")
     if host is None:
         return result
     result["status"] = host.findtext("status/@state") or "down"
